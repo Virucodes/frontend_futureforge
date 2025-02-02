@@ -74,14 +74,3 @@ const CareerAdvisor = () => {
 };
 
 export default CareerAdvisor;
-
-
-
-
-
-
-
-
-import Card from "./Card"; // Use relative imports
-import Button from "./Button"; // Use relative imports
-import Textarea from "./Textarea2"; 
