@@ -1,0 +1,31 @@
+.welcome-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent; /* Optional fade effect */
+    z-index: 1000;
+    animation: fadeOut 1s ease-in-out 9s forwards; /* Fades out after 9 seconds */
+  }
+  
+  .welcome-image {
+    width: 70vw; /* Make image take up most of the screen */
+    max-width: 800px; /* Ensures it doesn’t get too big on large screens */
+    height: auto;
+  }
+  
+  /* Fade Out Animation */
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+  
