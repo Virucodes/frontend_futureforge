@@ -5,26 +5,26 @@ import backgroundImage from "../assests/images/background1.png";
 import loginImage from "../assests/images/login.jpg";
 import TextBox from "../components/TextBox";
 import Button from "../components/Button";
-import axios from "axios";
-import WelcomeAnimation from "../components/WelcomeAnimation"; // Import the animation component
+import WelcomeAnimation from "../components/WelcomeAnimation";
+import { authAPI } from "../config/api.config";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [showAnimation, setShowAnimation] = useState(false); // State for animation
+  const [showAnimation, setShowAnimation] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post("https://backend-wm1d.onrender.com/user/login", {
+      const response = await authAPI.login({
         email,
-        password,
+        password
       });
-  
+
       // Store the token from your backend response
       localStorage.setItem('token', response.data.token);
       localStorage.setItem("email", email);
@@ -34,9 +34,9 @@ const LoginPage = () => {
       } else {
         localStorage.removeItem("password");
       }
-  
+
       setShowAnimation(true);
-  
+
       setTimeout(() => {
         navigate("/chat");
       }, 10000);
@@ -70,11 +70,21 @@ const LoginPage = () => {
               </p>
 
               {/* Email Field */}
-              <TextBox placeholder="Enter your email" label="Email" type="text" Icon={EnvelopeIcon} value={email} setValue={setEmail} required />
+              <TextBox 
+                placeholder="Enter your email" 
+                label="Email" 
+                type="text" 
+                Icon={EnvelopeIcon} 
+                value={email} 
+                setValue={setEmail} 
+                required 
+              />
 
               {/* Password Field */}
               <div className="relative my-4 w-full">
-                <label className="absolute top-[-10px] left-3 bg-white px-1 text-gray-500 text-sm font-medium">Password</label>
+                <label className="absolute top-[-10px] left-3 bg-white px-1 text-gray-500 text-sm font-medium">
+                  Password
+                </label>
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
@@ -83,19 +93,32 @@ const LoginPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                 />
-                <button type="button" className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700" onClick={() => setShowPassword(!showPassword)}>
+                <button 
+                  type="button" 
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700" 
+                  onClick={() => setShowPassword(!showPassword)}
+                >
                   {showPassword ? <EyeSlashIcon className="w-6 h-6" /> : <EyeIcon className="w-6 h-6" />}
                 </button>
               </div>
 
               {/* Remember Me Checkbox */}
               <div className="flex items-center mb-5">
-                <input type="checkbox" id="checkbox" className="h-4 w-4 rounded mr-2 accent-blue-600" checked={remember} onChange={() => setRemember(!remember)} />
+                <input 
+                  type="checkbox" 
+                  id="checkbox" 
+                  className="h-4 w-4 rounded mr-2 accent-blue-600" 
+                  checked={remember} 
+                  onChange={() => setRemember(!remember)} 
+                />
                 <label htmlFor="checkbox" className="text-gray-600">Remember me</label>
               </div>
 
               {/* Sign In Button */}
-              <Button name="Sign In" className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg py-3 rounded-lg shadow-md transition-all" />
+              <Button 
+                name="Sign In" 
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg py-3 rounded-lg shadow-md transition-all" 
+              />
 
               {/* Signup Link */}
               <p className="text-gray-600 mt-4 text-center">

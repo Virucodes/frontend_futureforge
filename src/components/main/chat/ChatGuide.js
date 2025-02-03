@@ -1,22 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import TextArea from "../../TextArea";
-import axios from "axios";
 import Button from "../../Button";
+import { chatAPI } from "../../../config/api.config";
 const { messageGuide } = require("../../../constants");
 
 function ChatGuide({ visible, onClose }) {
   const [chat, setChat] = useState(null);
   const [chatInput, setChatInput] = useState("");
   const [loading, setLoading] = useState(true);
-
-  // Ref to track the chat container for scrolling
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
     fetchChats();
   }, []);
 
-  // Scroll to the bottom of the chat whenever new chat data is loaded
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
@@ -26,9 +23,7 @@ function ChatGuide({ visible, onClose }) {
   const fetchChats = async () => {
     try {
       const email = localStorage.getItem("email");
-      const response = await axios.get(`http://localhost:5000/chat-guide`, {
-        params: { email: email },
-      });
+      const response = await chatAPI.getChatGuide(email);
 
       setChat(response.data);
       console.log(response.data);
@@ -61,9 +56,12 @@ function ChatGuide({ visible, onClose }) {
             response: [chatInput],
           };
 
-      const url = chat ? `http://localhost:5000/chat-guide` : `http://localhost:5000/chat-guide`;
-
-      const response = chat ? await axios.put(url, payload) : await axios.post(url, payload);
+      let response;
+      if (chat) {
+        response = await chatAPI.updateChatGuide(payload);
+      } else {
+        response = await chatAPI.createChatGuide(payload);
+      }
 
       if (response.status === 200 || response.status === 201) {
         setChatInput("");
@@ -84,8 +82,18 @@ function ChatGuide({ visible, onClose }) {
         <div className="flex flex-col mx-auto pb-5 bg-[#CAF0F8] rounded-lg shadow-lg p-6 w-full md:w-2/3" style={{ height: "80vh" }}>
           {/* Top Section - Buttons */}
           <div className="flex justify-between mb-5 space-x-4">
-            <Button type="button" name="Back" onClick={onClose} className="bg-[#0077B6] hover:bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-lg shadow-md" />
-            <Button type="button" name="New Chat" onClick={() => setChat(null)} className="bg-[#0077B6] hover:bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-lg shadow-md" />
+            <Button 
+              type="button" 
+              name="Back" 
+              onClick={onClose} 
+              className="bg-[#0077B6] hover:bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-lg shadow-md" 
+            />
+            <Button 
+              type="button" 
+              name="New Chat" 
+              onClick={() => setChat(null)} 
+              className="bg-[#0077B6] hover:bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-lg shadow-md" 
+            />
           </div>
 
           {/* Chat Messages Section */}
@@ -158,10 +166,13 @@ function ChatGuide({ visible, onClose }) {
 
           {/* Input Section */}
           {!chat?.disable && (
-            <form className="flex flex-row mt-auto w-full" onSubmit={async (e) => {
+            <form 
+              className="flex flex-row mt-auto w-full" 
+              onSubmit={async (e) => {
                 e.preventDefault();
                 await handleSend();
-              }}>
+              }}
+            >
               <TextArea
                 type="text"
                 value={chatInput}
@@ -170,7 +181,11 @@ function ChatGuide({ visible, onClose }) {
                 required={true}
                 className="w-full border border-[#0077B6] rounded-l-md p-2 text-[#023E8A]"
               />
-              <Button type="submit" name="Send" className="w-20 bg-[#0077B6] hover:bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-r-md shadow-md transition-all duration-200" />
+              <Button 
+                type="submit" 
+                name="Send" 
+                className="w-20 bg-[#0077B6] hover:bg-[#00B4D8] text-white font-bold py-2 px-4 rounded-r-md shadow-md transition-all duration-200" 
+              />
             </form>
           )}
         </div>

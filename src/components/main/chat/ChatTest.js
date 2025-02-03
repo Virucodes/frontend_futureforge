@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import TextArea from "../../TextArea";
 import Button from "../../Button";
-import axios from "axios";
+import { chatAPI } from "../../../config/api.config";
 const { messageTest } = require("../../../constants");
 
 function ChatTest({ visible, onClose }) {
@@ -26,10 +26,7 @@ function ChatTest({ visible, onClose }) {
   const fetchChats = async () => {
     try {
       const email = localStorage.getItem("email");
-      const response = await axios.get(`http://localhost:5000/chat-test`, {
-        params: { email: email },
-      });
-
+      const response = await chatAPI.getChatTest(email);
       setChat(response.data);
       setLoading(false);
     } catch (error) {
@@ -43,14 +40,14 @@ function ChatTest({ visible, onClose }) {
       setLoading(true);
       let response = null;
       if (chat) {
-        response = await axios.put(`http://localhost:5000/chat-test`, {
+        response = await chatAPI.updateChatTest({
           id: chat._id,
           email: email,
           message: chat.message,
           response: [...chat.response, chatInput],
         });
       } else {
-        response = await axios.post(`http://localhost:5000/chat-test`, {
+        response = await chatAPI.createChatTest({
           email: email,
           message: [messageTest.initial],
           response: [chatInput],

@@ -25,7 +25,7 @@ const AuthRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem("token");
   
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/login" replace />;
   }
   
   return children;
@@ -42,9 +42,9 @@ function App() {
         <Route
           path="/login"
           element={
-            <AuthRoute>
+            
               <LoginPage />
-            </AuthRoute>
+           
           }
         />
         <Route

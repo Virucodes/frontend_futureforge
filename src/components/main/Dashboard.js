@@ -14,7 +14,7 @@ function Dashboard() {
   const fetchAnnalys = async () => {
     try {
       const email = localStorage.getItem("email");
-      const Annalys = await axios.get(`https://backend-wm1d.onrender.com/annalys`, {
+      const Annalys = await axios.get(`http://localhost:5000/annalys`, {
         params: { email: email },
       });
 
@@ -28,7 +28,7 @@ function Dashboard() {
   const resetCareerAnnalys = async () => {
     try {
       const email = localStorage.getItem("email");
-      await axios.put(`https://backend-wm1d.onrender.com/annalys`, {
+      await axios.put(`http://localhost:5000/annalys`, {
         email: email,
         newCareerSummary: [],
       });
@@ -41,7 +41,7 @@ function Dashboard() {
   const resetTestAnnalys = async () => {
     try {
       const email = localStorage.getItem("email");
-      await axios.put(`https://backend-wm1d.onrender.com/annalys`, {
+      await axios.put(`http://localhost:5000/annalys`, {
         email: email,
         newTestSummary: [],
       });

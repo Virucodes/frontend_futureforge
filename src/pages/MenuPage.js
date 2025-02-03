@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "../assests/images/logo.png";
 import {
   ChartBarIcon,
@@ -10,6 +10,20 @@ import {
 
 const MenuPage = ({ page }) => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Clear any authentication tokens from localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    // Clear any other auth-related data you might have stored
+    
+    // Optional: Clear any application state
+    // If using Redux or other state management, dispatch logout action here
+    
+    // Redirect to login page
+    navigate('/');
+  };
 
   return (
     <div className="flex flex-row h-screen w-full bg-blue-50">
@@ -52,13 +66,13 @@ const MenuPage = ({ page }) => {
         </div>
 
         <div className="flex flex-col-reverse">
-          <Link 
-            to="/login" 
+          <button
+            onClick={handleLogout}
             className="w-full flex flex-row hover:bg-red-500 py-4 text-white text-md transition-colors duration-200"
           >
             <ArrowLeftStartOnRectangleIcon className="w-8 h-8 mx-5" />
-            <button>Logout</button>
-          </Link>
+            <span>Logout</span>
+          </button>
         </div>
       </div>
       <div className="flex flex-col w-5/6 pb-5">

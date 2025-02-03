@@ -19,7 +19,7 @@ function EditProfile() {
         }
 
         const response = await axios.get(
-          `https://backend-wm1d.onrender.com/user/getuserbyemail`,
+          `http://localhost:5000/user/getuserbyemail`,
           {
             params: { email },
           }
@@ -53,7 +53,7 @@ function EditProfile() {
 
     try {
       const response = await axios.put(
-        `https://backend-wm1d.onrender.com/user/update/${id}`,
+        `http://localhost:5000/user/update/${id}`,
         userData
       );
       alert(response?.data?.message);
