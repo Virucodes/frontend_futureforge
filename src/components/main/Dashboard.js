@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { annalysAPI } from "../../config/api.config.js";
 import Chart from "../Chart";
 import Button from "../Button";
 
@@ -14,40 +14,32 @@ function Dashboard() {
   const fetchAnnalys = async () => {
     try {
       const email = localStorage.getItem("email");
-      const Annalys = await axios.get(`http://localhost:5000/annalys`, {
-        params: { email: email },
-      });
+      const response = await annalysAPI.getAnnalys(email);
 
-      setCareerAnnalys(Annalys.data?.careerAnnalys);
-      setTestAnnalys(Annalys.data?.testAnnalys);
+      setCareerAnnalys(response.data?.careerAnnalys);
+      setTestAnnalys(response.data?.testAnnalys);
     } catch (error) {
-      console.error("Failed to fetch chats:", error);
+      console.error("Failed to fetch analysis:", error);
     }
   };
 
   const resetCareerAnnalys = async () => {
     try {
       const email = localStorage.getItem("email");
-      await axios.put(`http://localhost:5000/annalys`, {
-        email: email,
-        newCareerSummary: [],
-      });
+      await annalysAPI.updateAnnalys(email, { newCareerSummary: [] });
       fetchAnnalys();
     } catch (error) {
-      console.error("Failed to reset career annalys:", error);
+      console.error("Failed to reset career analysis:", error);
     }
   };
 
   const resetTestAnnalys = async () => {
     try {
       const email = localStorage.getItem("email");
-      await axios.put(`http://localhost:5000/annalys`, {
-        email: email,
-        newTestSummary: [],
-      });
+      await annalysAPI.updateAnnalys(email, { newTestSummary: [] });
       fetchAnnalys();
     } catch (error) {
-      console.error("Failed to reset test annalys:", error);
+      console.error("Failed to reset test analysis:", error);
     }
   };
 
@@ -84,7 +76,7 @@ function Dashboard() {
                     return (
                       <div key={index}>
                         <span className="font-semibold">{profession}</span> : <span className="text-blue-600">{score} %</span>
-                        {index !== item.summary.split(",").length - 1 && <br />}{" "}
+                        {index !== item.summary.split(",").length - 1 && <br />} {" "}
                       </div>
                     );
                   })}

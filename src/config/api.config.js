@@ -99,3 +99,17 @@ export const chatAPI = {
 
     
   };
+
+
+  export const annalysAPI = {
+    getAnnalys: (email) => {
+      return axiosInstance.get(API_ROUTES.ANALYSIS, {
+        params: { email },
+      });
+    },
+  
+    updateAnnalys: (email, payload) => {
+      return axiosInstance.put(API_ROUTES.ANALYSIS, { email, ...payload });
+    },
+  };
+  
